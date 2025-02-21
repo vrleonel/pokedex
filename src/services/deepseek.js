@@ -31,55 +31,27 @@ EXAMPLE JSON OUTPUT:
 
 
 async function deepSeek(description) {
-  const completion = await openai.chat.completions.create({
-    messages: [
-      { role: "user", content: `${description}`},
-      { role: "system", content: systemPrompt }
-    ],
-    respose_format: {
-      type: "json_schema",
-    },
-    // model: "deepseek-chat",
-    model: "deepseek/deepseek-chat:free",
-    // model: "openai/gpt-4o",
-  });
+  try {
 
-  console.log({completion});
-  return completion.choices[0].message.content;
+    const completion = await openai.chat.completions.create({
+      messages: [
+        { role: "user", content: `${description}`},
+        { role: "system", content: systemPrompt }
+      ],
+      respose_format: {
+        type: "json_schema",
+      },
+      // model: "deepseek-chat",
+      model: "deepseek/deepseek-chat:free",
+      // model: "openai/gpt-4o",
+    });
+  
+    console.log({completion});
+    return completion.choices[0].message.content;
+  } catch (err) {
+    console.error('Erro na API do OPENROUTER:', err);
+    return null;
+  }
 }
-
-// ```
-// {
-//   "messages": [
-//     { "role": "user", "content": "What's the weather like in London?" }
-//   ],
-//   "response_format": {
-//     "type": "json_schema",
-//     "json_schema": {
-//       "name": "weather",
-//       "strict": true,
-//       "schema": {
-//         "type": "object",
-//         "properties": {
-//           "location": {
-//             "type": "string",
-//             "description": "City or location name"
-//           },
-//           "temperature": {
-//             "type": "number",
-//             "description": "Temperature in Celsius"
-//           },
-//           "conditions": {
-//             "type": "string",
-//             "description": "Weather conditions description"
-//           }
-//         },
-//         "required": ["location", "temperature", "conditions"],
-//         "additionalProperties": false
-//       }
-//     }
-//   }
-// }
-// ```
 
 export { deepSeek };
