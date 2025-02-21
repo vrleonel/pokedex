@@ -27,11 +27,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html', // Usa o template HTML
     }),
-    new Dotenv(), // Habilita o uso de variáveis de ambiente do .env
+    new Dotenv({
+      systemvars: true,
+    }),
   ],
   devServer: {
-    static: path.join(__dirname, 'dist'), // Corrigido: contentBase foi substituído por static no Webpack 5
+    static: path.join(__dirname, 'dist'), 
     compress: false,
-    port: 3000, // Porta do servidor de desenvolvimento
+    port: 3000,
   },
 };
