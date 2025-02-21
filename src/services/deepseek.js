@@ -1,8 +1,10 @@
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-        baseURL: process.env.REACT_APP_OPENROUTERURL,
-        apiKey: process.env.REACT_APP_OPENROUTERKEY,
+        baseURL: process.env.OPENROUTER_URL,
+        apiKey: process.env.OPENROUTER_KEY,
+        "HTTP-Referer": "https://pokedex.vrleonel.dev", 
+        "X-Title": "Pokemon Search", // Optional. Site title for rankings on openrouter.ai.
         dangerouslyAllowBrowser: true,
 });
 
