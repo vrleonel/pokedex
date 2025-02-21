@@ -8,7 +8,7 @@ const PokemonSearch = () => {
   const [loading, setLoading] = useState(false);
   const [pokemon, setPokemon] = useState(null);
   const [error, setError] = useState('');
-  const [evolutions, setEvolutions] = useState([]);
+  const [evolutionData, setEvolutionData] = useState(null);
 
   // Inicialize o DeepSeek (substitua pela sua chave de API)
   
@@ -44,36 +44,53 @@ const PokemonSearch = () => {
     }
   };
 
-  const fetchPokemonData = async (pokemonId) => {
+  const fetchPokemonData = async (pokemonName) => {
     try {
-      const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
-      console.log('response', response.data);
+      const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`);
       setPokemon(response.data);
       setError('');
-      fetchEvolutions(response.data.id);
+
+      // Busca as evoluções
+      const evolutions = await fetchEvolutions(response.data.id);
+      setEvolutionData(evolutions);
     } catch (err) {
       setError('Pokémon não encontrado.');
       setPokemon(null);
-      setEvolutions([]);
+      setEvolutionData(null);
     }
   };
 
   const fetchEvolutions = async (pokemonId) => {
     try {
+      // Busca a espécie do Pokémon para obter a URL da cadeia de evolução
       const speciesResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`);
       const evolutionChainUrl = speciesResponse.data.evolution_chain.url;
+  
+      // Busca a cadeia de evolução
       const evolutionResponse = await axios.get(evolutionChainUrl);
-      const evolutions = [];
-      let chain = evolutionResponse.data.chain;
-      while (chain) {
-        console.log('chain', chain);
-        evolutions.push(chain.species.name);
-        chain = chain.evolves_to[0];
-      }
-      setEvolutions(evolutions);
+  
+      // Função recursiva para construir a lista aninhada de evoluções
+      const parseEvolutionChain = (chain) => {
+        const evolutionData = {
+          name: chain.species.name,
+          evolvesTo: [],
+        };
+  
+        // Se houver múltiplas evoluções, percorre cada uma delas
+        if (chain.evolves_to && chain.evolves_to.length > 0) {
+          chain.evolves_to.forEach((evolution) => {
+            evolutionData.evolvesTo.push(parseEvolutionChain(evolution)); // Chama a função recursivamente
+          });
+        }
+  
+        return evolutionData;
+      };
+  
+      // Inicia a recursão a partir da cadeia principal
+      return parseEvolutionChain(evolutionResponse.data.chain);
     } catch (err) {
       console.error('Erro ao buscar evoluções:', err);
-      setEvolutions([]);
+      return null;
     }
   };
 
@@ -97,6 +114,24 @@ const PokemonSearch = () => {
     }
   };
 
+  const renderEvolutions = (evolutionData) => {
+    
+    return (
+      <ul>
+        <li>
+        <a href={`/?id=${evolutionData.name}`}>{evolutionData.name}</a>
+          {evolutionData.evolvesTo.length > 0 && (
+            <ul>
+              {evolutionData.evolvesTo.map((evolution, index) => (
+                <li key={index}>{renderEvolutions(evolution)}</li>
+              ))}
+            </ul>
+          )}
+        </li>
+      </ul>
+    );
+  };
+
   return (
     <div>
       <h1>Pokedex</h1>
@@ -113,11 +148,7 @@ const PokemonSearch = () => {
             src={pokemon.sprites.other['official-artwork'].front_default} alt={pokemon.name} />
           <p className="pokedex-number">Número da Pokédex: {pokemon.id}</p>
           <h3>Evoluções:</h3>
-          <ul>
-            {evolutions.map((evo, index) => (
-              <li key={index}><a href={`/?id=${evo}`}>{evo}</a></li>
-            ))}
-          </ul>
+          {evolutionData && renderEvolutions(evolutionData)}
         </div>
       )}
     </div>
