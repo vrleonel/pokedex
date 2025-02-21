@@ -7,8 +7,6 @@ const searchDeepSeek = (description) => {
     method: "POST",
     headers: {  
       "Authorization": `Bearer ${process.env.REACT_APP_OPENROUTERURL}`,
-      "HTTP-Referer": "http://localhost:3000", // Optional. Site URL for rankings on openrouter.ai.
-      "X-Title": "Pokemon Search", // Optional. Site title for rankings on openrouter.ai.
       "Content-Type": "application/json"
     },
     body: JSON.stringify({

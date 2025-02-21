@@ -44,9 +44,9 @@ const PokemonSearch = () => {
     }
   };
 
-  const fetchPokemonData = async (pokemonName) => {
+  const fetchPokemonData = async (pokemonId) => {
     try {
-      const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`);
+      const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
       setPokemon(response.data);
       setError('');
 
