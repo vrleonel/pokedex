@@ -1,32 +1,76 @@
 .app {
-    text-align: center;
-    padding: 20px;
-  
-    h1 {
-      color: #333;
+  text-align: center;
+  padding: 20px;
+
+  h1 {
+    color: #333;
+  }
+
+  form {
+    margin-top: 20px;
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
     }
-  
-    form {
-      margin-top: 20px;
-  
-      input {
-        padding: 10px;
-        font-size: 16px;
-        width: 300px;
-      }
-  
-      button {
-        padding: 10px 20px;
-        font-size: 16px;
-        margin-left: 10px;
-      }
-    }
-  
-    .response {
-      margin-top: 20px;
-      padding: 20px;
-      background-color: #f0f0f0;
-      border-radius: 5px;
-      display: inline-block;
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-left: 10px;
     }
   }
+
+  .response {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    display: inline-block;
+  }
+}
+
+// App starts here
+.App {
+  text-align: center;
+}
+
+h2 {
+  text-transform: capitalize;
+} 
+.speak {
+  border: 1px solid #0000006E;
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+  font-size: 20px;
+  cursor:pointer;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+ul li {
+  text-transform: capitalize;
+  font-size: 20px;
+  display: block;
+}
+
+li a {
+  padding: 10px 20px;
+  background-color: bisque;
+  border: 1px solid #0000006E;
+  color: #000000;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+li a:hover {
+  background-color: cadetblue;
+  color: #ffffff;
+}

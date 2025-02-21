@@ -99,7 +99,7 @@ const PokemonSearch = () => {
 
   return (
     <div>
-      <h1>Encontre seu Pokémon</h1>
+      <h1>Pokedex</h1>
       <button className="speak" onClick={handleVoiceSearch}>Falar 🗣️</button>
       {error && <p>{error}</p>}
       {description && <p>Descrição: {description}</p>}
