@@ -1,7 +1,9 @@
 // src/components/PokemonSearch.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { deepSeek } from '../services/deepseek'; // Exemplo de importação da biblioteca DeepSeek
+import { deepSeek } from '../services/deepseek';
+
+import './style.scss';
 
 const PokemonSearch = () => {
   const [description, setDescription] = useState('');
@@ -11,11 +13,11 @@ const PokemonSearch = () => {
   const [evolutionData, setEvolutionData] = useState(null);
 
   // Inicialize o DeepSeek (substitua pela sua chave de API)
-  
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const pokedexId = params.get('id');
-    
+
     if (pokedexId) {
       fetchPokemonData(pokedexId);
     }
@@ -28,7 +30,7 @@ const PokemonSearch = () => {
       setLoading(false);
       const responseJson = JSON.parse(response);
 
-    
+
       const pokemonName = responseJson.pokedex;
       return pokemonName;
     } catch (err) {
@@ -58,26 +60,26 @@ const PokemonSearch = () => {
       const speciesResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`);
       const evolutionChainUrl = speciesResponse.data.evolution_chain.url;
       const speciesDataVarieties = speciesResponse.data.varieties;
-  
+
       console.log('speciesDataVarieties', speciesDataVarieties);
       const evolutionResponse = await axios.get(evolutionChainUrl);
-  
+
       const parseEvolutionChain = (chain) => {
         const evolutionData = {
           name: chain.species.name,
           evolvesTo: [],
         };
-  
+
         // Se houver múltiplas evoluções, percorre cada uma delas
         if (chain.evolves_to && chain.evolves_to.length > 0) {
           chain.evolves_to.forEach((evolution) => {
             evolutionData.evolvesTo.push(parseEvolutionChain(evolution)); // Chama a função recursivamente
           });
         }
-  
+
         return evolutionData;
       };
-  
+
       return parseEvolutionChain(evolutionResponse.data.chain)
     } catch (err) {
       console.error('Erro ao buscar evoluções:', err);
@@ -106,7 +108,7 @@ const PokemonSearch = () => {
   };
 
   const renderEvolutions = (evolutionData) => {
-    
+
     return (
       <ul>
         <li>
