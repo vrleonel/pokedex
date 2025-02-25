@@ -123,6 +123,14 @@ const PokemonSearch = () => {
     );
   };
 
+  const renderTypes = (types) => (
+
+      types.map((type, index) => (
+        <span key={index} className={`type ${type.type.name}`}>{type.type.name}</span>
+      ))
+
+  );
+
   return (
     <div>
       <h1>Pokedex</h1>
@@ -137,6 +145,7 @@ const PokemonSearch = () => {
           <img
             width="300"
             src={pokemon.sprites.other['official-artwork'].front_default} alt={pokemon.name} />
+          <p className="pokemon-type">Tipos: {renderTypes(pokemon.types)}</p>
           <p className="pokedex-number">Número da Pokédex: {pokemon.id}</p>
           <h3>Evoluções:</h3>
           {evolutionData && renderEvolutions(evolutionData)}
