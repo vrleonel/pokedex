@@ -63,10 +63,7 @@ h2 {
 
 ul {
   list-style-type: none;
-  // padding: 0;
-  // display: flex;
-  // justify-content: center;
-  // gap: 20px;
+  padding: 0;
 }
 
 ul li {
@@ -75,7 +72,12 @@ ul li {
   display: flex;
   gap: 10px;
   align-items: flex-start;
-  flex-direction:column
+  flex-direction: row;
+  justify-content:flex-start;
+}
+
+ul > li {
+  justify-content: center;
 }
 
 li a {
@@ -90,4 +92,12 @@ li a {
 li a:hover {
   background-color: cadetblue;
   color: #ffffff;
+}
+
+ul li ul {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
 }
