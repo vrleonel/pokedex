@@ -1,34 +1,37 @@
 $cerulean-blue: #3B4CCA;
 $gold-foil: #B3A125;
-$button-color: $cerulean-blue;
+$red-pokedex: #ef5350;
+
+$button-color: $red-pokedex;
 
 @mixin pixel-border($color) {
   box-shadow:
     -4px 0 0 -2px $color, /* Left inner shadow */
     -8px 0 0 -4px $color, /* Leftmost shadow */
     4px 0 0 -2px $color, /* Right inner shadow */
-    8px 0 0 -4px $color, /* Rightmost shadow */
-    4px 2px 5px 1px rgba(0, 0, 0, 0.6);
+    8px 0 0 -4px $color; /* Rightmost shadow */
+    // 4px 2px 5px 1px rgba(0, 0, 0, 0.6);
     background-color: $color;
+    position: relative;
 
-    // &:before {
-    //   background-color: #fff;
-    //   padding: 5px;
-    //   position:  absolute;
-    //   display: block;
-    //   content: ' ';
-    //   z-index: -1;
-    //   width: 100%;
-    //   height: 100%;
-    //   left: -5px;
-    //   top: -5px;
+    &:before {
+      background-color: rgba($color, 0.3);
+      padding: 1px;
+      position:  absolute;
+      display: block;
+      content: ' ';
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+      left: 1px;
+      top: 1px;
 
-    //   box-shadow:
-    //   -4px 0 0 -2px #fff, /* Left inner shadow */
-    //   -8px 0 0 -4px #fff, /* Leftmost shadow */
-    //   4px 0 0 -2px #fff, /* Right inner shadow */
-    //   8px 0 0 -4px #fff; /* Rightmost shadow */
-    // }
+      box-shadow:
+      -4px 0 0 -2px rgba($color, 0.3), /* Left inner shadow */
+      -8px 0 0 -4px rgba($color, 0.3), /* Leftmost shadow */
+      4px 0 0 -2px rgba($color, 0.3), /* Right inner shadow */
+      8px 0 0 -4px rgba($color, 0.3); /* Rightmost shadow */
+    }
 }
 
 h2 {
@@ -37,13 +40,26 @@ h2 {
 
 .speak {
   all: unset;
-  @include pixel-border($cerulean-blue);
+  @include pixel-border($button-color);
   font-size: 20px;
   padding: 8px 10px;
   color: white;
   cursor: pointer;
 
   position: relative;
+
+  &:hover {
+    @include pixel-border($color: $cerulean-blue);
+  }
+
+  &:active {
+    &:before {
+      box-shadow: inset 0 0 5px 0px rgba($cerulean-blue, .75);
+      left: 0px;
+      top: 0px;
+      padding: 0px;
+    }
+  }
 
   // &:before {
   //   background-color: darkred;
