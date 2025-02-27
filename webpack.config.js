@@ -2,10 +2,21 @@ const path = require('path'); // Corrigido: path estava com um apóstrofo extra
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
+const CopyPlugin = require("copy-webpack-plugin");
+
+module.exports = {
+  plugins: [
+
+  ],
+};
+
+
+
 module.exports = {
   entry: './src/index.js', // Ponto de entrada do seu aplicativo
   output: {
     path: path.resolve(__dirname, 'dist'), // Pasta de saída
+    publicPath: "/",
     filename: 'bundle.js', // Nome do arquivo de saída
   },
   module: {
@@ -41,9 +52,14 @@ module.exports = {
     new Dotenv({
       systemvars: true,
     }),
+    new CopyPlugin({
+      patterns: [
+        { from: "public/images", to: "images" },
+      ],
+    }),
   ],
   devServer: {
-    static: path.join(__dirname, 'public'), // Servir arquivos estáticos da pasta public
+    static: path.join(__dirname, 'public'),
     compress: false,
     port: 3000,
   },
