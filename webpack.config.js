@@ -43,7 +43,7 @@ module.exports = {
     }),
   ],
   devServer: {
-    static: path.join(__dirname, 'public'), // Servir arquivos estáticos da pasta public
+    static: path.join(__dirname, 'dist'), // Servir arquivos estáticos da pasta public
     compress: false,
     port: 3000,
   },
