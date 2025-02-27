@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npm run copy && webpack serve --mode development",
-    "build": "cp -r ./public/images ./dist/images && webpack --mode production",
+    "start": "webpack serve --mode development --open --hot",
+    "build": "webpack --mode production",
     "copy": "mkdir dist && cp -r ./public/images ./dist/images",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -38,6 +38,7 @@
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
+    "file-loader": "^6.2.0",
     "globals": "^16.0.0",
     "html-webpack-plugin": "^5.6.3",
     "prettier": "^3.5.2",
