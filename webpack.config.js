@@ -21,6 +21,17 @@ module.exports = {
         test: /\.scss$/, // Processa arquivos .scss
         use: ['style-loader', 'css-loader', 'sass-loader'], // Loaders para SASS
       },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i, // Processa arquivos de imagem
+        use: [
+          {
+            loader: 'file-loader', // Usa o file-loader para carregar imagens
+            options: {
+              name: '[path][name].[ext]', // Mantém o nome e o caminho original do arquivo
+            },
+          },
+        ],
+      },
     ],
   },
   plugins: [
@@ -32,7 +43,7 @@ module.exports = {
     }),
   ],
   devServer: {
-    static: path.join(__dirname, 'dist'), 
+    static: path.join(__dirname, 'public'), // Servir arquivos estáticos da pasta public
     compress: false,
     port: 3000,
   },
