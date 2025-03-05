@@ -12,8 +12,6 @@ const PokemonSearch = () => {
   const [error, setError] = useState('');
   const [evolutionData, setEvolutionData] = useState(null);
 
-  // Inicialize o DeepSeek (substitua pela sua chave de API)
-
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const pokedexId = params.get('id');
@@ -56,7 +54,6 @@ const PokemonSearch = () => {
 
   const fetchEvolutions = async (pokemonId) => {
     try {
-      // Busca a espécie do Pokémon para obter a URL da cadeia de evolução
       const speciesResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`);
       const evolutionChainUrl = speciesResponse.data.evolution_chain.url;
       const speciesDataVarieties = speciesResponse.data.varieties;
