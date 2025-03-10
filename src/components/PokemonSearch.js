@@ -2,6 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { deepSeek } from '../services/deepseek';
+import { pronunciations } from '../data/pronunciations';
+
+import { saveConfigToLocalStorage, getConfigFromLocalStorage } from '../utils/localStorage';
+import { speakText } from '../utils/speech';
 
 import './style.scss';
 
@@ -15,11 +19,29 @@ const PokemonSearch = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const pokedexId = params.get('id');
+    const speakeConfig = params.get('speak');
+
+    if(speakeConfig) {
+      saveConfigToLocalStorage('speak', speakeConfig);
+    }
 
     if (pokedexId) {
+      saveConfigToLocalStorage('pokedexId', pokedexId);
       fetchPokemonData(pokedexId);
     }
   }, []);
+
+  useEffect(() => {
+    const configSpeak = getConfigFromLocalStorage('speak');
+
+    if(pokemon && pokemon.id && configSpeak !== 'false') {
+      const phoneticName = pronunciations[pokemon.id -1 ].pronunciation;
+      if (phoneticName) {
+        speakText(phoneticName);
+      }
+    }
+  }, [pokemon]);
+
 
   const identifyPokemon = async (description) => {
     try {
@@ -42,7 +64,6 @@ const PokemonSearch = () => {
       const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
       setPokemon(response.data);
       setError('');
-
       const evolutions = await fetchEvolutions(response.data.id);
       setEvolutionData(evolutions);
     } catch (err) {
@@ -146,6 +167,7 @@ const PokemonSearch = () => {
             src={pokemon.sprites.other['official-artwork'].front_default} alt={pokemon.name} />
           <p className="pokemon-type">Tipos: {renderTypes(pokemon.types)}</p>
           <p className="pokedex-number">Número da Pokédex: {pokemon.id}</p>
+          <p>Pronuncia: {pronunciations[pokemon.id -1 ].pronunciation} </p>
           <h3>Evoluções:</h3>
           {evolutionData && renderEvolutions(evolutionData)}
         </div>
