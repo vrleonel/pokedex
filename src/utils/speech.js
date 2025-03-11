@@ -19,7 +19,7 @@ const speakText = async (word) => {
   const debugMode = getConfigFromLocalStorage('debug');
   const utterance = new SpeechSynthesisUtterance(word);
   const voices = await allVoicesObtained;
-  const selectedVoice = voices.findIndex(({name}) => name === 'Aaron');
+  const selectedVoice = voices.findIndex(({lang}) => lang === 'en-US');
 
   if (debugMode) console.log({voices}, 'Selected voice', voices[selectedVoice]);
 
