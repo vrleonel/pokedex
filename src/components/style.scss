@@ -35,18 +35,22 @@ $button-color: $red-pokedex;
 }
 
 main {
-  padding: 0 20px
+  padding: 20px
 }
-
+h1 {
+  margin: 0;
+}
 h2 {
   text-transform: capitalize;
 }
 
 .search-bar {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   flex-wrap: wrap;
   gap: 20px;
+  align-items: center;
+
   input {
     font-size: 24px;
     padding: 5px;

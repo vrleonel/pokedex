@@ -19,7 +19,7 @@ const PokemonSearch = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const pokedexId = params.get('id').toLowerCase();
+    const pokedexId = params.get('id')?.toLowerCase();
     const speakConfig = params.get('speak');
     const debugParam = params.get('debug');
 
@@ -157,8 +157,9 @@ const PokemonSearch = () => {
 
   return (
     <main>
-      <h1>Pokedex</h1>
       <div className="search-bar">
+        <h1>Pokedex</h1>
+        <button className="search-bar-spean-button speak" onClick={handleVoiceSearch}>Falar 🗣️</button>
         <form name="searchForm" className="search-bar-form" onSubmit={(event) => {
           event.preventDefault();
           hendleFormSubmit(event);
@@ -171,7 +172,7 @@ const PokemonSearch = () => {
           />
           <button type="submit">Buscar</button>
         </form>
-        <button className="search-bar-spean-button speak" onClick={handleVoiceSearch}>Falar 🗣️</button>
+
       </div>
       {error && <p>{error}</p>}
       {description && <p>Descrição: {description}</p>}
