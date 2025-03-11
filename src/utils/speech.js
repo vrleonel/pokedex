@@ -1,14 +1,30 @@
 // File from: https://stackblitz.com/edit/web-platform-pg3tw5jn?file=script.js
-const speakText = (word) => {
+
+import { getConfigFromLocalStorage } from './localStorage';
+
+const allVoicesObtained = new Promise(function(resolve) {
+  let voices = window.speechSynthesis.getVoices();
+  if (voices.length !== 0) {
+    resolve(voices);
+  } else {
+    window.speechSynthesis.addEventListener("voiceschanged", function() {
+      voices = window.speechSynthesis.getVoices();
+      resolve(voices);
+    });
+  }
+});
+
+
+const speakText = async (word) => {
+  const debugMode = getConfigFromLocalStorage('debug');
   const utterance = new SpeechSynthesisUtterance(word);
+  const voices = await allVoicesObtained;
+  const selectedVoice = voices.findIndex(({name}) => name === 'Aaron');
 
-  utterance.lang = 'en-US';
-  const voices = speechSynthesis.getVoices();
-  utterance.voice = voices[158]; // Choose a specific voice
-  // console.log(utterance.voice.lang);
+  if (debugMode) console.log({voices}, 'Selected voice', voices[selectedVoice]);
+
+  utterance.voice = voices[selectedVoice];
   speechSynthesis.speak(utterance);
-
-  // Speak the text
 }
 
 const voiceTesting = () => {

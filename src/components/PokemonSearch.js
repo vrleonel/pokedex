@@ -15,15 +15,17 @@ const PokemonSearch = () => {
   const [pokemon, setPokemon] = useState(null);
   const [error, setError] = useState('');
   const [evolutionData, setEvolutionData] = useState(null);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const pokedexId = params.get('id');
-    const speakeConfig = params.get('speak');
+    const pokedexId = params.get('id').toLowerCase();
+    const speakConfig = params.get('speak');
+    const debugParam = params.get('debug');
 
-    if(speakeConfig) {
-      saveConfigToLocalStorage('speak', speakeConfig);
-    }
+    if(speakConfig) saveConfigToLocalStorage('speak', speakConfig);
+
+    if(debugParam) saveConfigToLocalStorage('debug', (debugParam === 'true' || debugParam === '1') ? 1 : 0);
 
     if (pokedexId) {
       saveConfigToLocalStorage('pokedexId', pokedexId);
@@ -35,7 +37,7 @@ const PokemonSearch = () => {
     const configSpeak = getConfigFromLocalStorage('speak');
 
     if(pokemon && pokemon.id && configSpeak !== 'false') {
-      const phoneticName = pronunciations[pokemon.id -1 ].pronunciation;
+      const phoneticName = pronunciations[pokemon.id -1 ]?.pronunciation;
       if (phoneticName) {
         speakText(phoneticName);
       }
@@ -47,11 +49,11 @@ const PokemonSearch = () => {
     try {
       setLoading(true);
       const response = await deepSeek(description);
+
       setLoading(false);
       const responseJson = JSON.parse(response);
-
-
       const pokemonName = responseJson.pokedex;
+
       return pokemonName;
     } catch (err) {
       console.error('Erro ao identificar o Pokémon:', err);
@@ -125,8 +127,12 @@ const PokemonSearch = () => {
     }
   };
 
-  const renderEvolutions = (evolutionData) => {
+  const hendleFormSubmit = (event) => {
+    event.preventDefault();
+    window.location.href = `/?id=${search}`;
+  };
 
+  const renderEvolutions = (evolutionData) => {
     return (
       <ul>
         <li>
@@ -144,21 +150,32 @@ const PokemonSearch = () => {
   };
 
   const renderTypes = (types) => (
-
       types.map((type, index) => (
         <span key={index} className={`type ${type.type.name}`}>{type.type.name}</span>
       ))
-
   );
 
   return (
-    <div>
+    <main>
       <h1>Pokedex</h1>
-      <button className="speak" onClick={handleVoiceSearch}>Falar 🗣️</button>
+      <div className="search-bar">
+        <form name="searchForm" className="search-bar-form" onSubmit={(event) => {
+          event.preventDefault();
+          hendleFormSubmit(event);
+        }}>
+          <input
+            type="text"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Número ou Nome"
+          />
+          <button type="submit">Buscar</button>
+        </form>
+        <button className="search-bar-spean-button speak" onClick={handleVoiceSearch}>Falar 🗣️</button>
+      </div>
       {error && <p>{error}</p>}
       {description && <p>Descrição: {description}</p>}
       {loading === true && <p>Carregando...</p>}
-      {(pokemon && loading === false )&& <p>Resposta: {pokemon.answer}</p>}
       {pokemon && (
         <div>
           <h2>{pokemon.name}</h2>
@@ -167,12 +184,12 @@ const PokemonSearch = () => {
             src={pokemon.sprites.other['official-artwork'].front_default} alt={pokemon.name} />
           <p className="pokemon-type">Tipos: {renderTypes(pokemon.types)}</p>
           <p className="pokedex-number">Número da Pokédex: {pokemon.id}</p>
-          <p>Pronuncia: {pronunciations[pokemon.id -1 ].pronunciation} </p>
+          <p>Pronuncia: {pronunciations[pokemon.id -1 ]?.pronunciation} </p>
           <h3>Evoluções:</h3>
           {evolutionData && renderEvolutions(evolutionData)}
         </div>
       )}
-    </div>
+    </main>
   );
 };
 
