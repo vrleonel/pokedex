@@ -179,17 +179,22 @@ const PokemonSearch = () => {
       {description && <p>Descrição: {description}</p>}
       {loading === true && <p>Carregando...</p>}
       {pokemon && (
-        <div>
-          <h2>{pokemon.name}</h2>
-          <img
-            width="300"
-            className="pokemon-image"
-            src={pokemon.sprites.other['official-artwork'].front_default} alt={pokemon.name} />
-          <p className="pokemon-type">Tipos: {renderTypes(pokemon.types)}</p>
-          <p className="pokedex-number">Número da Pokédex: {pokemon.id}</p>
-          <p>Pronuncia: {pronunciations[pokemon.id -1 ]?.pronunciation} </p>
-          <h3>Evoluções:</h3>
-          {evolutionData && renderEvolutions(evolutionData)}
+        <div className="pokemon-card">
+          <div className="pokemon-info">
+            <h2 className="pokemon-name">#{pokemon.id} {pokemon.name}</h2>
+            <img
+              width="300"
+              className="pokemon-image"
+              src={pokemon.sprites.other['official-artwork'].front_default} alt={pokemon.name} />
+          </div>
+          <side className="pokemon-stats">
+            <p className="pokemon-type">Tipos: {renderTypes(pokemon.types)}</p>
+            <p>Pronuncia: {pronunciations[pokemon.id -1 ]?.pronunciation} </p>
+          </side>
+          <div className="pokemon-evolutions">
+            <h3>Evoluções:</h3>
+            {evolutionData && renderEvolutions(evolutionData)}
+          </div>
         </div>
       )}
     </main>
