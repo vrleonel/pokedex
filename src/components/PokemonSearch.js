@@ -133,6 +133,7 @@ const PokemonSearch = () => {
   };
 
   const renderEvolutions = (evolutionData) => {
+    console.log('evolutionData', evolutionData);
     return (
       <ul>
         <li>
@@ -182,6 +183,7 @@ const PokemonSearch = () => {
           <h2>{pokemon.name}</h2>
           <img
             width="300"
+            className="pokemon-image"
             src={pokemon.sprites.other['official-artwork'].front_default} alt={pokemon.name} />
           <p className="pokemon-type">Tipos: {renderTypes(pokemon.types)}</p>
           <p className="pokedex-number">Número da Pokédex: {pokemon.id}</p>
