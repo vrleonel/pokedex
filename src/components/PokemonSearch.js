@@ -45,6 +45,9 @@ const PokemonSearch = () => {
   }, [pokemon]);
 
 
+  const getStringId = (id) => {
+    return `#${id?.toString().padStart(4, '0')}`;
+  }
   const identifyPokemon = async (description) => {
     try {
       setLoading(true);
@@ -84,27 +87,34 @@ const PokemonSearch = () => {
       console.log('speciesDataVarieties', speciesDataVarieties);
       const evolutionResponse = await axios.get(evolutionChainUrl);
 
-      const parseEvolutionChain = (chain) => {
+      const parseEvolutionChain = async (chain) => {
+        const pokemonName = chain.species.name;
+        const pokemonResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+        const imageUrl = pokemonResponse.data.sprites.other['official-artwork'].front_default;
+        const id = pokemonResponse.data.id;
+
         const evolutionData = {
-          name: chain.species.name,
-          evolvesTo: [],
+          id,
+          name: pokemonName,
+          image: imageUrl, // Adicionando a URL da imagem
+          evolvesTo: []
         };
 
         // Se houver múltiplas evoluções, percorre cada uma delas
         if (chain.evolves_to && chain.evolves_to.length > 0) {
-          chain.evolves_to.forEach((evolution) => {
-            evolutionData.evolvesTo.push(parseEvolutionChain(evolution)); // Chama a função recursivamente
-          });
+          evolutionData.evolvesTo = await Promise.all(
+            chain.evolves_to.map((evolution) => parseEvolutionChain(evolution))
+          );
         }
 
         return evolutionData;
       };
 
-      return parseEvolutionChain(evolutionResponse.data.chain)
+      return await parseEvolutionChain(evolutionResponse.data.chain);
     } catch (err) {
       console.error('Erro ao buscar evoluções:', err);
       return null;
-    }
+  }
   };
 
   const handleVoiceSearch = () => {
@@ -132,16 +142,21 @@ const PokemonSearch = () => {
     window.location.href = `/?id=${search}`;
   };
 
-  const renderEvolutions = (evolutionData) => {
-    console.log('evolutionData', evolutionData);
+  const renderEvolutions = (evolutionData, key = 0) => {
     return (
-      <ul>
-        <li>
-        <a href={`/?id=${evolutionData.name}`}>{evolutionData.name}</a>
+      <ul className="evolution-chain">
+        <li key={`${key++}-1`} data-key={`${key++}-1`}>
+          <a href={`/?id=${evolutionData.name}`}>
+            <img src={evolutionData.image} width="100" alt={evolutionData.name} />
+            <h4>{getStringId(evolutionData.id)} {evolutionData.name}</h4>
+          </a>
+
           {evolutionData.evolvesTo.length > 0 && (
             <ul>
               {evolutionData.evolvesTo.map((evolution, index) => (
-                <li key={index}>{renderEvolutions(evolution)}</li>
+                <li key={`${key}-${index+1}`}  data-key={`${key}-${index+1}`}>
+                  {renderEvolutions(evolution, index+1)}
+                </li>
               ))}
             </ul>
           )}
@@ -159,7 +174,7 @@ const PokemonSearch = () => {
   return (
     <main>
       <div className="search-bar">
-        <h1>Pokedex</h1>
+        <h1><a href="/">Pokedex</a></h1>
         <button className="search-bar-spean-button speak" onClick={handleVoiceSearch}>Falar 🗣️</button>
         <form name="searchForm" className="search-bar-form" onSubmit={(event) => {
           event.preventDefault();
@@ -181,19 +196,20 @@ const PokemonSearch = () => {
       {pokemon && (
         <div className="pokemon-card">
           <div className="pokemon-info">
-            <h2 className="pokemon-name">#{pokemon.id} {pokemon.name}</h2>
+            <h2 className="pokemon-name"><em>{getStringId(pokemon.id)}</em> {pokemon.name}</h2>
+            <p className="pokemon-type">{renderTypes(pokemon.types)}</p>
             <img
               width="300"
               className="pokemon-image"
               src={pokemon.sprites.other['official-artwork'].front_default} alt={pokemon.name} />
           </div>
-          <side className="pokemon-stats">
-            <p className="pokemon-type">Tipos: {renderTypes(pokemon.types)}</p>
+          <aside className="pokemon-stats">
+            {/* <p className="pokemon-type">Tipos: {renderTypes(pokemon.types)}</p> */}
             <p>Pronuncia: {pronunciations[pokemon.id -1 ]?.pronunciation} </p>
-          </side>
+          </aside>
           <div className="pokemon-evolutions">
             <h3>Evoluções:</h3>
-            {evolutionData && renderEvolutions(evolutionData)}
+            {evolutionData ? renderEvolutions(evolutionData) : <p>Não há evoluções</p>}
           </div>
         </div>
       )}
