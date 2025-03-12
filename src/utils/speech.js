@@ -15,7 +15,7 @@ const allVoicesObtained = new Promise(function(resolve) {
 });
 
 
-const speakText = async (word) => {
+const speakText = async (word, voiceId = null) => {
   const debugMode = getConfigFromLocalStorage('debug');
   const utterance = new SpeechSynthesisUtterance(word);
   const voices = await allVoicesObtained;
@@ -23,7 +23,7 @@ const speakText = async (word) => {
 
   if (debugMode) console.log({voices}, 'Selected voice', voices[selectedVoice]);
 
-  utterance.voice = voices[selectedVoice];
+  utterance.voice = voiceId > 0 ? voices[voiceId] : voices[selectedVoice];
   speechSynthesis.speak(utterance);
 }
 

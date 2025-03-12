@@ -22,10 +22,13 @@ const PokemonSearch = () => {
     const pokedexId = params.get('id')?.toLowerCase();
     const speakConfig = params.get('speak');
     const debugParam = params.get('debug');
+    const voiceParam = params.get('voice');
 
     if(speakConfig) saveConfigToLocalStorage('speak', speakConfig);
 
     if(debugParam) saveConfigToLocalStorage('debug', (debugParam === 'true' || debugParam === '1') ? 1 : 0);
+
+    if(voiceParam) saveConfigToLocalStorage('voice', voiceParam);
 
     if (pokedexId) {
       saveConfigToLocalStorage('pokedexId', pokedexId);
@@ -35,11 +38,12 @@ const PokemonSearch = () => {
 
   useEffect(() => {
     const configSpeak = getConfigFromLocalStorage('speak');
+    const voiceId = getConfigFromLocalStorage('voice');
 
     if(pokemon && pokemon.id && configSpeak !== 'false') {
       const phoneticName = pronunciations[pokemon.id -1 ]?.pronunciation;
       if (phoneticName) {
-        speakText(phoneticName);
+        speakText(phoneticName, voiceId > 0 && voiceId);
       }
     }
   }, [pokemon]);
