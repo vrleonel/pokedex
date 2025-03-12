@@ -1,0 +1,60 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10000;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  display: none;
+
+  &.open {
+    display: flex;
+  }
+}
+.modal-config {
+  position: absolute;
+  z-index: 10010;
+  width: 80%;
+  height: 80%;
+  background-color: #fff;
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  align-self: center;
+  margin: 0 auto;
+
+  @media only screen and (max-width: 480px) {
+    width: 100%;
+    height: 100%;
+  }
+
+  header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    button {
+      all: unset;
+      cursor: pointer;
+      color: #fff;
+      font-size: 20px;
+      padding: 5px;
+      &:hover {
+        background-color: #555;
+      }
+    }
+  }
+
+  main {
+    padding: 20px;
+    text-align: left;
+  }
+
+}

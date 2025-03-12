@@ -1,5 +1,6 @@
 // src/components/PokemonSearch.js
 import React, { useState, useEffect } from 'react';
+import ModalConfig from './ModalConfig';
 import axios from 'axios';
 import { deepSeek } from '../services/deepseek';
 import { pronunciations } from '../data/pronunciations';
@@ -16,6 +17,7 @@ const PokemonSearch = () => {
   const [error, setError] = useState('');
   const [evolutionData, setEvolutionData] = useState(null);
   const [search, setSearch] = useState('');
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -48,10 +50,14 @@ const PokemonSearch = () => {
     }
   }, [pokemon]);
 
+  const handleModal = () => {
+    setModal(!modal);
+  }
 
   const getStringId = (id) => {
     return `#${id?.toString().padStart(4, '0')}`;
   }
+
   const identifyPokemon = async (description) => {
     try {
       setLoading(true);
@@ -180,6 +186,7 @@ const PokemonSearch = () => {
       <div className="search-bar">
         <h1><a href="/">Pokedex</a></h1>
         <button className="search-bar-spean-button speak" onClick={handleVoiceSearch}>Falar 🗣️</button>
+        <button className="search-bar-config-button" onClick={handleModal}>⚙️</button>
         <form name="searchForm" className="search-bar-form" onSubmit={(event) => {
           event.preventDefault();
           hendleFormSubmit(event);
@@ -192,7 +199,7 @@ const PokemonSearch = () => {
           />
           <button type="submit">Buscar</button>
         </form>
-
+        <ModalConfig toggle={modal} handleModal={handleModal}/>
       </div>
       {error && <p>{error}</p>}
       {description && <p>Descrição: {description}</p>}

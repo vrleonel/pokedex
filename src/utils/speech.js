@@ -15,11 +15,12 @@ const allVoicesObtained = new Promise(function(resolve) {
 });
 
 
-const speakText = async (word, voiceId = null) => {
+const speakText = async (word) => {
   const debugMode = getConfigFromLocalStorage('debug');
   const utterance = new SpeechSynthesisUtterance(word);
   const voices = await allVoicesObtained;
-  const selectedVoice = voices.findIndex(({lang}) => lang === 'en-US');
+  const voiceId = getConfigFromLocalStorage('voice');
+  const selectedVoice = voiceId || voices.findIndex(({lang}) => lang === 'en-US');
 
   if (debugMode) console.log({voices}, 'Selected voice', voices[selectedVoice]);
 
@@ -64,4 +65,4 @@ const voiceTesting = () => {
     inputTxt.blur();
   };
 }
-export { speakText, voiceTesting };
+export { speakText, voiceTesting, allVoicesObtained };
