@@ -1,17 +1,9 @@
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-        baseURL: process.env.OPENROUTER_URL,
-        apiKey: process.env.OPENROUTER_KEY,
-        "HTTP-Referer": "https://pokedex.vrleonel.dev", 
-        "X-Title": "Pokemon Search", // Optional. Site title for rankings on openrouter.ai.
-        dangerouslyAllowBrowser: true,
-});
-
 const systemPrompt = `
 O usuário fará uma pergunta sobre um pokemon e você deve responder com uma resposta curta (answer) o nome (name) do pokemon, o tipo (type) e o número na pokedex (pokedex).
 
-EXAMPLE INPUT: 
+EXAMPLE INPUT:
 Qual é o pokemon do tipo fogo mais forte?
 
 EXAMPLE JSON OUTPUT:
@@ -24,14 +16,17 @@ EXAMPLE JSON OUTPUT:
 }
 `;
 
-//const userPropt = "Which is the longest river in the world? The Nile River."
-
-// messages = [{"role": "system", "content": system_prompt},
-//             {"role": "user", "content": user_prompt}]
-
 
 async function deepSeek(description) {
   try {
+
+    const openai = new OpenAI({
+      baseURL: process.env.OPENROUTER_URL,
+      apiKey: process.env.OPENROUTER_KEY,
+      "HTTP-Referer": "https://pokedex.vrleonel.dev",
+      "X-Title": "Pokemon Search", // Optional. Site title for rankings on openrouter.ai.
+      dangerouslyAllowBrowser: true,
+    });
 
     const completion = await openai.chat.completions.create({
       messages: [
@@ -41,11 +36,9 @@ async function deepSeek(description) {
       respose_format: {
         type: "json_schema",
       },
-      // model: "deepseek-chat",
       model: "deepseek/deepseek-chat:free",
-      // model: "openai/gpt-4o",
     });
-  
+
     console.log({completion});
     return completion.choices[0].message.content;
   } catch (err) {
