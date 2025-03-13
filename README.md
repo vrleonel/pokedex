@@ -6,6 +6,15 @@
 Production: https://pokedex.leonel.dev
 ### Setup
 > node v20 required
+> get API Key from https://openrouter.ai/
+
+Add `.env` file on root folder with: 
+```
+OPENROUTER_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+OPENROUTER_URL=https://openrouter.ai/api/v1
+```
+
+### Commands
 ```
 $ npm install
 $ npm start 
